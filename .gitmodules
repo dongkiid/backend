@@ -1,0 +1,4 @@
+[submodule "config-submodule"]
+	path = config-submodule
+	url = https://github.com/PetGoorm/config-submodule.git
+	branch = main
