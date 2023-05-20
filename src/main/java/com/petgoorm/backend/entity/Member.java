@@ -44,4 +44,9 @@ public class Member extends BaseEntity{
 
     @Column(name = "address")
     private String address;
+
+    //유저 권한, spring security에는 USER_ROLE이 필요
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
 }
