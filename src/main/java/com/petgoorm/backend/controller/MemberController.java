@@ -2,9 +2,11 @@ package com.petgoorm.backend.controller;
 
 import com.petgoorm.backend.dto.ResponseDTO;
 import com.petgoorm.backend.dto.member.MemberRequestDTO;
+import com.petgoorm.backend.dto.member.MemberResponseDTO;
 import com.petgoorm.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +19,7 @@ public class MemberController {
 
     //회원추가
     @PostMapping("/signup")
-    public ResponseDTO<Long> signup(@RequestBody MemberRequestDTO memberRequestDTO) {
+    public ResponseDTO<Long> signup(@RequestBody MemberRequestDTO.SignUp memberRequestDTO) {
         //System.out.println(memberRequestDTO);
         return memberService.signup(memberRequestDTO);
     }
@@ -34,6 +36,12 @@ public class MemberController {
     public ResponseDTO<String> checkNick(@RequestParam String nickName) {
         return memberService.checkNicknameDuplication(nickName);
     }
+
+    @PostMapping("/login")
+    public ResponseDTO<MemberResponseDTO.TokenInfo> login(@Validated MemberRequestDTO.Login login) {
+        return memberService.login(login);
+    }
+
 
 
 }
