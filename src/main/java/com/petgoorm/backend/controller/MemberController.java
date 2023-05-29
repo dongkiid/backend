@@ -6,7 +6,6 @@ import com.petgoorm.backend.dto.member.MemberResponseDTO;
 import com.petgoorm.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,21 +24,27 @@ public class MemberController {
     }
 
     //이메일 중복체크
-    @PostMapping("/checkEmail")
+    @GetMapping("/checkEmail")
     public ResponseDTO<String> checkEmail(@RequestParam String email) {
         log.info("이메일 " + email);
         return memberService.checkEmailDuplication(email);
     }
 
     //닉네임 중복체크
-    @PostMapping("/checkNick")
-    public ResponseDTO<String> checkNick(@RequestParam String nickName) {
-        return memberService.checkNicknameDuplication(nickName);
+    @GetMapping("/checkNick")
+    public ResponseDTO<String> checkNick(@RequestParam String nickname) {
+        return memberService.checkNicknameDuplication(nickname);
     }
 
     @PostMapping("/login")
-    public ResponseDTO<MemberResponseDTO.TokenInfo> login(@Validated MemberRequestDTO.Login login) {
+    public ResponseDTO<MemberResponseDTO.TokenInfo> login(@RequestBody MemberRequestDTO.Login login) {
         return memberService.login(login);
+    }
+
+    @PostMapping("/logout")
+    public ResponseDTO<String> logout(@RequestHeader("Authorization") String accessToken) {
+        String tokenWithoutBearer = accessToken.replace("Bearer ", "");
+        return memberService.logout(tokenWithoutBearer);
     }
 
 

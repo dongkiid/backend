@@ -39,4 +39,6 @@ public interface MemberService {
     ResponseDTO<String> checkNicknameDuplication(String nickname);
 
     ResponseDTO<MemberResponseDTO.TokenInfo> login(MemberRequestDTO.Login login);
+
+    ResponseDTO<String> logout(String accessToken);
 }
