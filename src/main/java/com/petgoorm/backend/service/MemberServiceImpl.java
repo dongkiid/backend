@@ -119,5 +119,34 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    @Transactional
+    @Override
+    public ResponseDTO<String> logout(String accessToken) {
+
+        // 1. Access Token 검증
+        if (!jwtTokenProvider.validateToken(accessToken)) {
+            return ResponseDTO.of(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다.", null);
+        }
+
+        // 2. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
+        // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete("RT:" + authentication.getName());
+        }
+
+        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        // 현재 redis에 저장되어 있는건 refreshtoken이고 이걸 삭제한다고 해도
+        // accesstoken은 만료되지 않는 한 살아있기 때문에 탈취당하면 안전하지 않다.
+        // 따라서 로그아웃 요청이 올 경우 이를 redis에 블랙리스트로 등록하여
+        // 요청에 포함된 accesstoken이 블랙리스트에 있을경우 거부하게 한다.
+        Long expiration = jwtTokenProvider.getExpiration(accessToken);
+        redisTemplate.opsForValue()
+                .set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+
+        return ResponseDTO.of(HttpStatus.OK.value(), "로그아웃 성공했습니다.", authentication.getName());
+    }
 
 }
