@@ -53,6 +53,23 @@ public class MemberController {
         return memberService.logout(tokenWithoutBearer);
     }
 
+    @PatchMapping("/editpw")
+    public ResponseDTO<Long> updatePassword(@RequestBody MemberRequestDTO.UpdatePassword updatePassword){
+        return memberService.updatePassword(updatePassword);
+
+    }
+    @PatchMapping("/editnick")
+    public ResponseDTO<Long> updateNick(@RequestBody MemberRequestDTO.UpdateNick updateNick){
+        return memberService.updateNick(updateNick);
+
+    }
+    @DeleteMapping("/remove")
+    public ResponseDTO<Long> delete(){
+        return memberService.deleteMember();
+    }
+
+
+
 
 
 }

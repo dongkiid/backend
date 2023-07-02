@@ -44,4 +44,12 @@ public interface MemberService {
     ResponseDTO<String> reissue(String nowAccessToken);
 
     ResponseDTO<String> logout(String accessToken);
+
+    ResponseDTO<Long> updatePassword(MemberRequestDTO.UpdatePassword updatePassword);
+
+    ResponseDTO<Long> updateNick(MemberRequestDTO.UpdateNick updateNick);
+
+    ResponseDTO<Long> deleteMember();
+
+
 }
