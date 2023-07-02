@@ -119,6 +119,33 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    //refresh token 유효성 검증 후 access token 재발급
+    @Override
+    public ResponseDTO<String> reissue(String nowAccessToken) {
+        // 1. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(nowAccessToken);
+
+        // 2. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+
+        // 3. Refresh Token 검증
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            return ResponseDTO.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Refresh Token 정보가 유효하지 않습니다.", null);
+        }
+
+        // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
+        if(ObjectUtils.isEmpty(refreshToken)) {
+            return ResponseDTO.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "잘못된 요청입니다", null);
+        }
+
+        // 4. 새로운 access 토큰 생성
+        String accessToken = jwtTokenProvider.accessToken(authentication);
+
+        return ResponseDTO.of(HttpStatus.OK.value(), "Token 정보가 갱신되었습니다.", accessToken);
+    }
+
+
+
     @Transactional
     @Override
     public ResponseDTO<String> logout(String accessToken) {

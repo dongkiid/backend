@@ -40,5 +40,8 @@ public interface MemberService {
 
     ResponseDTO<MemberResponseDTO.TokenInfo> login(MemberRequestDTO.Login login);
 
+    //refresh token 유효성 검증 후 access token 재발급
+    ResponseDTO<String> reissue(String nowAccessToken);
+
     ResponseDTO<String> logout(String accessToken);
 }

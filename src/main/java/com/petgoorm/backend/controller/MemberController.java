@@ -41,6 +41,12 @@ public class MemberController {
         return memberService.login(login);
     }
 
+    @PostMapping("/reissue")
+    public ResponseDTO<String> reissue(@RequestHeader("Authorization") String accessToken) {
+        String tokenWithoutBearer = accessToken.replace("Bearer ", "");
+        return memberService.reissue(tokenWithoutBearer);
+    }
+
     @PostMapping("/logout")
     public ResponseDTO<String> logout(@RequestHeader("Authorization") String accessToken) {
         String tokenWithoutBearer = accessToken.replace("Bearer ", "");
