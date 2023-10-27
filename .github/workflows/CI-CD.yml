@@ -1,4 +1,4 @@
-name: Build and Deploy Spring Boot to AWS EC2
+name: CI-CD
 
 on:
   push:
@@ -19,12 +19,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN_SUBMUDULE }}
+          submodules: true
       
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
+      
+      - name: Setup MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          mysql root password: ${{ secrets.MARIADB_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
+     
       - name: Permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
