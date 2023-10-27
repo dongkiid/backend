@@ -1,6 +1,8 @@
 name: Build and Deploy Spring Boot to AWS EC2
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ "main" ]
     
