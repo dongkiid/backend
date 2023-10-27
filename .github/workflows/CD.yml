@@ -10,7 +10,7 @@ on:
 env:
   PROJECT_NAME: petgoorm_project
   BUCKET_NAME: petgoorm
-  CODE_DEPLOY_APP_NAME: petgoorm_cd
+  CODE_DEPLOY_APP_NAME: pegoorm_cd
   DEPLOYMENT_GROUP_NAME: petgoorm
 # -------------------------- 환경 변수
 
