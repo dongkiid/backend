@@ -27,12 +27,22 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      
+          
+      - name: Change Submodule URL
+        run: |
+          git submodule set-url path/to/submodule git@github.com:dongkiid/config-submodule.git
+          # 위 명령에서 "path/to/submodule"은 실제 서브모듈의 경로로 바꿔야 합니다.
+
+      - name: Update Submodules
+        run: |
+          git submodule update --init --recursive
+          # 서브모듈을 업데이트합니다.
+          
       - name: Setup MariaDB
         uses: getong/mariadb-action@v1.1
         with:
           mysql root password: ${{ secrets.MARIADB_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
-     
+       
       - name: Permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
